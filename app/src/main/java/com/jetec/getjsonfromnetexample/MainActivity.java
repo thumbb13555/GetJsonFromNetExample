@@ -39,7 +39,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         catchData();
+//        testChineseIndex(); 測試中文索引
 
+
+    }
+
+    private void testChineseIndex() {
+        String catchData = "https://api.myjson.com/bins/pfqbc";
+        new Thread(()->{
+            try {
+                URL url = new URL(catchData);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                InputStream is = connection.getInputStream();
+                BufferedReader in = new BufferedReader(new InputStreamReader(is));
+                String line = in.readLine();
+                StringBuffer json = new StringBuffer();
+                while (line != null) {
+                    json.append(line);
+                    line = in.readLine();
+                }
+                JSONArray jsonArray= new JSONArray(String.valueOf(json));
+                Log.d(TAG, "onCreate: "+jsonArray);
+                for (int i=0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String data = jsonObject.getString("路口");
+                    Log.d(TAG, "onCreate: 路口"+data);
+                }
+
+            }catch (Exception x){
+                Log.d(TAG, "onCreate: "+x);
+            }
+
+        }).start();
     }
 
     private void catchData(){
